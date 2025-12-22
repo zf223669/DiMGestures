@@ -71,8 +71,8 @@ ckpt_path: ./logs/Chinese_host/epoch_epoch=099.ckpt
 The pretrained checkpoint is available for download at the following URL:
 https://drive.google.com/drive/folders/17oyNomJw5yuqXfmsN7VyXyw4-hnVNDs4?usp=drive_link
 # Note:
-To train using the BEAT/ZEGGS dataset, please refer to the similar approach outlined in the PG section below.
-
+1. To train using the BEAT/ZEGGS dataset, please refer to the similar approach outlined in the PG section below.
+2. You can install Mamba by yourself.(https://github.com/state-spaces/mamba)
 # Reference
 ```
 @INPROCEEDINGS{11291529,
