@@ -1,0 +1,66 @@
+_target_: src.Fast_Gestures.model_module.fast_gesture_module.FastGestureModule
+
+given_betas:
+beta_schedule: 'linear'  # cosine / linear
+timesteps: 1000 #2000
+linear_start: 1e-4
+linear_end: 8e-2    # 5e-2
+cosine_s: 8e-3
+v_posterior: 0.             # weight for choosing posterior variance as sigma = (1-v) * beta_tilde + v * beta
+parameterization: "eps"
+learning_rate: 1.0e-4
+gesture_features: 166 # 69 65 166 ZEGGS 156 beat
+cond_stage_trainable: False
+loss_type: 'l2'
+use_ema: False
+log_sync_dist: False
+clip_denoised: False
+bvh_save_path: ${paths.output_dir}/
+bvh_save_file: ${now:%y%m%d_%H%M}
+eps_theta_mod:
+  _target_: src.Fast_Gestures.model_module.fast_gestures_epsilon_theta.EpsilonTheta
+  encoder_dim: 1280
+  time_emb_dim: ${model.eps_theta_mod.encoder_dim}
+  mamba_d_state: 256  # SSM state expansion factor
+  mamba_d_conv: 3  # Local convolution width
+  mamba_expand: 2  # Block expansion factor
+  style_mamba_d_state: 256  # SSM state expansion factor
+  style_mamba_d_conv: 4  # Local convolution width
+  style_mamba_expand: 2  # Block expansion factor
+  block_depth: 5
+  mamba_version: "mamba_2"    # "mamba_1", "mamba_2"
+  is_mamba_style_extractor: True
+  motion_encoder:
+    _target_: src.Fast_Gestures.components.motion_ae.PoseEncoderConv
+    gesture_features: ${model.gesture_features}
+    encoder_dim: ${model.eps_theta_mod.encoder_dim}
+    encoder_kernel_size: 3
+    batch_norm: False
+    simple_encoder: True  # just one conv1d layer
+    encoder_type: 'single_conv' # 'single_conv' 'separable_conv'
+  motion_decoder:
+    _target_: src.Fast_Gestures.components.motion_ae.PoseDecoderConv
+    pose_dim: ${model.gesture_features}
+    latent_dim: ${model.eps_theta_mod.encoder_dim}
+    decoder_type: ${model.eps_theta_mod.motion_encoder.encoder_type}
+    use_convtranspose: False
+  wavLMEncoder:
+    _target_: src.Fast_Gestures.components.wav_lm_encoder.WavLMEncoder
+    # checkpoint_path: '../../utils/wavlm/pretrain-models/WavLM-Base+.pt'
+    checkpoint_path: ${paths.root_dir}/src/utils/wavlm/pretrain-models/WavLM-Base+.pt
+    # checkpoint_path: '/home/zf223669/Mount/Diffmotion-v3-sync/src/utils/wavlm/pretrain-models/WavLM-Large.pt'
+  cond_dropout_rate: 0
+  wavlm_layer: 12
+  enable_style_encoder: True
+
+scheduler_config: # 10000 warmup steps
+  target: src.utils.LDM.lr_scheduler.LambdaLinearScheduler
+  params:
+    warm_up_steps: [ 10000 ]
+    cycle_lengths: [ 10000000000000 ] # incredibly large number to prevent corner cases
+    f_start: [ 5.e-5 ]
+    f_max: [ 1. ]
+    f_min: [ 1. ]
+
+
+

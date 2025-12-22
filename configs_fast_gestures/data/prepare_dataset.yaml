@@ -1,0 +1,44 @@
+data_dir: /home/yzq/PycharmProjects/DiM-Gesture/data/Chinese_host
+processed_dir: /home/yzq/PycharmProjects/DiM-Gesture/data/Chinese_host/processed_20s_20fps_2_no_finger
+
+train_window_secs: 20
+test_window_secs: 20
+window_overlap: 0.2
+fps: 20     # 20
+fullbody: True
+
+holdout: ['A_11_0_0_f_live_excited_stand', 'A_11_1_0_f_recitation_delightful_stand',
+                 'A_11_1_1_f_recitation_excited_stand', 'A_11_1_2_f_recitation_calm_stand',
+                 'A_11_1_3_f_recitation_sad_stand', 'A_11_1_4_f_recitation_happy_stand',
+                 'A_11_1_5_f_recitation_serious_stand', 'A_11_2_0_f_news_delightful_stand',
+                 'A_11_2_1_f_news_excited_stand', 'A_11_2_2_f_news_calm_stand', 'A_11_2_3_f_news_sad_stand',
+                 'A_11_2_4_f_news_happy_stand', 'A_11_2_5_f_news_serious_stand',
+                 'A_11_3_0_f_speech_delightful_stand', 'A_11_3_1_f_speech_excited_stand',
+                 'A_11_3_2_f_speech_calm_stand', 'A_11_3_3_f_speech_sad_stand',
+                 'A_11_3_4_f_speech_happy_stand', 'A_11_3_5_f_speech_serious_stand',
+                 'A_11_4_0_f_program_delightful_stand', 'A_11_4_1_f_program_excited_stand',
+                 'A_11_4_2_f_program_calm_stand', 'A_11_4_3_f_program_sad_stand',
+                 'A_11_4_4_f_program_happy_stand', 'A_11_4_5_f_program_serious_stand',
+                 'A_13_0_0_m_live_excited_stand', 'A_13_1_0_m_recitation_delightful_stand',
+                 'A_13_1_1_m_recitation_excited_stand', 'A_13_1_2_m_recitation_calm_stand',
+                 'A_13_1_3_m_recitation_sad_stand', 'A_13_1_4_m_recitation_happy_stand',
+                 'A_13_1_5_m_recitation_serious_stand', 'A_13_2_0_m_news_delightful_stand',
+                 'A_13_2_1_m_news_excited_stand', 'A_13_2_2_m_news_calm_stand', 'A_13_2_3_m_news_sad_stand',
+                 'A_13_2_4_m_news_happy_stand', 'A_13_2_5_m_news_serious_stand',
+                 'A_13_3_0_m_speech_delightful_stand', 'A_13_3_1_m_speech_excited_stand',
+                 'A_13_3_2_m_speech_calm_stand', 'A_13_3_3_m_speech_sad_stand',
+                 'A_13_3_4_m_speech_happy_stand', 'A_13_3_5_m_speech_serious_stand',
+                 'A_13_4_0_m_program_delightful_stand', 'A_13_4_1_m_program_excited_stand',
+                 'A_13_4_2_m_program_calm_stand', 'A_13_4_3_m_program_sad_stand',
+                 'A_13_4_4_m_program_happy_stand', 'A_13_4_5_m_program_serious_stand']
+# for smoothing the root position and rotation
+position_smoothing: 0    # default 5
+rotation_smoothing: 0    # default 10
+constant_remover_eps: 1e-8
+is_standardize: True
+map_to_exponential: True
+extract_MFCC: False
+# for extract wavform
+audio_sample_rate: 16000  # for Wav_LM
+
+#-m data.Trinity.map_to_exponential=False data.Trinity.extract_MFCC=False data.Trinity.is_standardize=True

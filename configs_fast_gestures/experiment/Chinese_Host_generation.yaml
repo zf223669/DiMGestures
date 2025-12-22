@@ -1,0 +1,73 @@
+# @package _global_
+
+# to execute this experiment run:
+# python train.py experiment=example
+
+defaults:
+  - override /data: fast_gestures_datamodule.yaml
+  - override /model: fast_gestures_module.yaml
+  - override /logger: null # wandb.yaml
+  - override /callbacks: fast_gesture_callbacks.yaml
+  - override /trainer: fast_gestures_gpu.yaml
+  - override /paths: fast_gestures_path.yaml
+
+task_name: "Chinese_host_generation"
+ckpt_path: ./logs/Chinese_host/epoch_epoch=099.ckpt
+seed: null
+train: False
+test: True
+use_auto_scale_batch_size: False
+
+trainer:
+  min_epochs: 10
+  max_epochs: 110
+#  max_steps: 10
+  devices: 1
+  check_val_every_n_epoch: 10
+  log_every_n_steps: 20
+  fast_dev_run: False
+
+
+profiler:
+  _target_: lightning.pytorch.profilers.SimpleProfiler
+  extended: True
+#  dirpath: ${paths.output_dir}/
+#  filename: 'profiler'
+
+logger:
+  wandb:
+    id:  ${task_name} # pass correct id to resume experiment! ${task_name}
+#    tags: ${tags}
+    name: ${task_name}
+    project: "Chinese_Host_Mamba"
+    group: "Chinese_Host"
+
+
+model:
+  timesteps: 1000 #2000
+  gesture_features: 117 # 69 65 125 for exp 117 for no exp    67 for no fingers
+  eps_theta_mod:
+    _target_: src.Fast_Gestures.model_module.fast_gestures_epsilon_theta.EpsilonTheta
+    encoder_dim: 1024 # 1280
+    time_emb_dim: ${model.eps_theta_mod.encoder_dim}
+    mamba_d_state: 256  # SSM state expansion factor
+    mamba_d_conv: 3  # Local convolution width
+    mamba_expand: 2  # Block expansion factor
+    style_mamba_d_state: 256  # SSM state expansion factor
+    style_mamba_d_conv: 4  # Local convolution width
+    style_mamba_expand: 2  # Block expansion factor
+    block_depth: 6        # 6 Good Results
+    style_mamba_version: 'mamba_2' # "mamba_1", "mamba_2"
+    mamba_version: "mamba_2"    # "mamba_1", "mamba_2"
+    is_mamba_style_extractor: True  # True use Mamba, False use conv
+    wavLMEncoder:
+      _target_: src.Fast_Gestures.components.chinese_speech_pretrain.HubertBase
+      checkpoint_path: ${paths.root_dir}/src/utils/chinese_speech_pretrain/hubert-base/chinese-hubert-base
+      model_path: ${paths.root_dir}/src/utils/chinese_speech_pretrain/hubert-base/chinese-hubert-base
+
+data:
+  data_root: ${paths.data_dir}Chinese_host/processed_20s_20f/feat_20fps_20s_WithExp_waveform_WithStd
+  framerate: 20
+  batch_size: 20
+  num_workers: 20
+  test_style: ['A_2_2_5_f_news_serious_stand']

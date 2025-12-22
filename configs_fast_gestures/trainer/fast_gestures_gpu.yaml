@@ -1,0 +1,7 @@
+defaults:
+  - default
+min_epochs: 1 # prevents early stopping
+max_epochs: 400
+accelerator: gpu
+devices: 1
+check_val_every_n_epoch: 10

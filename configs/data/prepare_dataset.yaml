@@ -1,0 +1,21 @@
+data_dir: /home/yzq/PycharmProjects/fast_gestures/data/BEAT/Sources
+processed_dir: /home/yzq/PycharmProjects/fast_gestures/data/BEAT/processed_20s_24fps
+
+train_window_secs: 20
+test_window_secs: 20
+window_overlap: 0.5
+fps: 24     # 20
+fullbody: True
+
+holdout: ['1_wayne_0_3_3']
+# for smoothing the root position and rotation
+position_smoothing: 0    # default 5
+rotation_smoothing: 0    # default 10
+constant_remover_eps: 1e-8
+is_standardize: True
+map_to_exponential: True
+extract_MFCC: False
+# for extract wavform
+audio_sample_rate: 16000  # for Wav_LM
+
+#-m data.Trinity.map_to_exponential=False data.Trinity.extract_MFCC=False data.Trinity.is_standardize=True
